@@ -9,14 +9,32 @@ from kivymd.uix.toolbar import MDTopAppBar
 class ConverterApp(MDApp):
 
     def flip(self):
-        print("working..")
+        self.lblPrimary.text = ""
+        self.txtInput.text = ""
+        if self.state == 0:
+            self.state = 1
+            self.toolbar.title = "Decimal to binary"
+            self.txtInput.hint_text = "Enter a decimal number"
+            self.lblSecondary.text = "In binary: "
+        else:
+            self.state = 0
+            self.toolbar.title = "Binary to decimal"
+            self.txtInput.hint_text = "Enter a binary number"
+            self.lblSecondary.text = "In decimal: "
+
 
     def convert(self, args):
-        val = int(self.txtInput.text,2)
-        self.lblPrimary.text = str(val)
+        if self.state == 0:
+            val = int(self.txtInput.text,2)
+            self.lblPrimary.text = str(val)
+        else:
+            val = bin(int(self.txtInput.text))[2:]
+            self.lblPrimary.text = val
 
     def build(self):
         screen = MDScreen()
+        self.state = 0
+        self.theme_cls.primary_palette = "DeepOrange"
         #UI Widgets go here
         ## top toolbar
         self.toolbar = MDTopAppBar(title="Binary to Decimal")
@@ -39,13 +57,12 @@ class ConverterApp(MDApp):
 
         ## label primary and secondary
         self.lblSecondary = MDLabel(
-            text="In decimal is: ",
+            text = "In decimal:",
             halign="center",
             pos_hint={"center_x": 0.5, "center_y": 0.35},
             theme_text_color = "Secondary"
         )
         self.lblPrimary = MDLabel(
-            text="888",
             halign="center",
             pos_hint={"center_x": 0.5, "center_y": 0.3},
             theme_text_color="Primary",
